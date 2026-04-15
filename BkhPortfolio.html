@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Md Bakhtiyar | Java Backend Architect — Animated Portfolio</title>
+  <!-- Google Fonts + Font Awesome + Devicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-dark: #03030e;
+      --surface-1: #0a0a18;
+      --surface-2: #111122;
+      --card-bg: rgba(18, 18, 35, 0.8);
+      --accent-cyan: #2dd4bf;
+      --accent-purple: #a855f7;
+      --accent-pink: #f43f5e;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --glow: 0 0 20px rgba(45,212,191,0.3);
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+    /* animated background particles */
+    .particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
+    .particle { position: absolute; background: radial-gradient(circle, rgba(45,212,191,0.3), transparent); border-radius: 50%; pointer-events: none; animation: floatParticle 18s infinite alternate; }
+    @keyframes floatParticle { 0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.2; } 100% { transform: translateY(-60px) translateX(40px) scale(1.3); opacity: 0.5; } }
+    .mesh-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(45,212,191,0.1), transparent 60%), radial-gradient(circle at 80% 70%, rgba(168,85,247,0.1), transparent 60%); z-index: -1; animation: slowDrift 20s infinite alternate; }
+    @keyframes slowDrift { 0% { transform: scale(1) translate(0,0); opacity: 0.7; } 100% { transform: scale(1.08) translate(2%, 1%); opacity: 1; } }
+    .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.015; pointer-events: none; z-index: -1; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-repeat: repeat; }
+    /* cursor */
+    .cursor { width: 8px; height: 8px; background: var(--accent-cyan); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.08s; }
+    .cursor-follower { width: 36px; height: 36px; border: 1.5px solid var(--accent-cyan); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; backdrop-filter: blur(3px); transition: transform 0.15s; }
+    /* glass nav */
+    .glass-nav { position: fixed; top: 20px; left: 5%; right: 5%; width: 90%; margin: 0 auto; background: rgba(10,10,24,0.7); backdrop-filter: blur(18px); border-radius: 60px; border: 1px solid rgba(45,212,191,0.25); z-index: 1000; padding: 0.7rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .nav-logo { font-family: 'Space Grotesk', monospace; font-weight: 800; font-size: 1.6rem; background: linear-gradient(135deg, #2dd4bf, #a855f7, #f43f5e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; transition: 0.2s; letter-spacing: 0.02em; }
+    .nav-links a:hover { color: var(--accent-cyan); text-shadow: 0 0 5px var(--accent-cyan); }
+    .nav-btn { background: linear-gradient(95deg, rgba(45,212,191,0.15), rgba(168,85,247,0.15)); border: 1px solid var(--accent-cyan); padding: 0.5rem 1.4rem; border-radius: 40px; color: var(--accent-cyan); font-weight: 600; transition: 0.3s; cursor: pointer; backdrop-filter: blur(4px); }
+    .nav-btn:hover { background: var(--accent-cyan); color: #03030e; box-shadow: 0 0 18px var(--accent-cyan); transform: scale(1.02); }
+    /* hero */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 6% 4rem; gap: 3rem; flex-wrap: wrap; position: relative; }
+    .hero-content { flex: 2; }
+    .profile-pic { flex: 1; display: flex; justify-content: center; }
+    .avatar { width: 280px; height: 280px; background: linear-gradient(135deg, #2dd4bf, #a855f7); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 40px -15px rgba(45,212,191,0.4); animation: floatAvatar 5s infinite ease-in-out; position: relative; }
+    .avatar::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; background: linear-gradient(135deg, #2dd4bf, #a855f7); filter: blur(20px); opacity: 0.5; z-index: -1; }
+    .avatar-initials { font-size: 4.2rem; font-weight: 800; font-family: 'Space Grotesk'; color: #03030e; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    @keyframes floatAvatar { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0); } }
+    .social-links-hero { display: flex; gap: 1rem; margin-top: 2rem; }
+    .social-icon { background: rgba(255,255,255,0.05); width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; transition: 0.25s; color: var(--text-secondary); font-size: 1.2rem; text-decoration: none; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05); }
+    .social-icon:hover { background: var(--accent-cyan); color: #03030e; transform: translateY(-4px); box-shadow: var(--glow); }
+    .btn-glow { background: linear-gradient(95deg, #2dd4bf, #a855f7); border: none; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 700; color: #03030e; transition: 0.25s; box-shadow: 0 5px 15px rgba(45,212,191,0.3); cursor: pointer; display: inline-block; text-decoration: none; }
+    .btn-outline-light { border: 1.5px solid var(--accent-cyan); background: rgba(45,212,191,0.05); padding: 0.9rem 2rem; border-radius: 50px; font-weight: 600; transition: 0.25s; display: inline-block; text-decoration: none; color: var(--accent-cyan); backdrop-filter: blur(4px); }
+    .btn-outline-light:hover { background: var(--accent-cyan); color: #03030e; box-shadow: var(--glow); }
+    /* sections */
+    .section { padding: 6rem 6%; position: relative; }
+    .section-badge { display: inline-block; background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.4); border-radius: 60px; padding: 0.3rem 1.2rem; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent-cyan); margin-bottom: 1rem; backdrop-filter: blur(2px); }
+    .section-title { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; font-family: 'Space Grotesk', sans-serif; background: linear-gradient(125deg, #fff, #2dd4bf); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    /* skill cards with logos */
+    .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.8rem; margin-top: 2.5rem; }
+    .skill-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; padding: 1.6rem; transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1); }
+    .skill-card:hover { border-color: var(--accent-cyan); transform: translateY(-8px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5); background: rgba(18,18,35,0.9); }
+    .tech-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 0.4rem 1rem; border-radius: 40px; font-size: 0.75rem; margin: 0.3rem 0.3rem 0 0; font-family: monospace; transition: 0.2s; }
+    .tech-tag:hover { border-color: var(--accent-cyan); background: rgba(45,212,191,0.1); }
+    /* projects */
+    .project-premium { background: var(--surface-2); border-radius: 2rem; border: 1px solid rgba(45,212,191,0.25); overflow: hidden; transition: all 0.35s; margin-bottom: 2rem; padding: 1.8rem; backdrop-filter: blur(4px); }
+    .project-premium:hover { transform: translateY(-6px); box-shadow: 0 30px 40px -18px black; border-color: var(--accent-cyan); }
+    .project-links a { margin-right: 1.2rem; color: var(--accent-cyan); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.2s; }
+    .project-links a:hover { text-shadow: 0 0 6px var(--accent-cyan); }
+    /* certificates */
+    .cert-card { background: var(--surface-2); border-radius: 1.5rem; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.06); transition: 0.25s; }
+    .cert-card a { color: var(--accent-cyan); text-decoration: none; font-weight: 500; }
+    .lang-badge { background: rgba(45,212,191,0.12); padding: 0.5rem 1.2rem; border-radius: 40px; display: inline-block; margin: 0.3rem; border: 1px solid rgba(45,212,191,0.3); }
+    /* contact form */
+    .form-modern input, .form-modern textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 1rem 1.2rem; color: white; transition: 0.2s; margin-bottom: 1rem; font-family: 'Inter'; }
+    .form-modern input:focus, .form-modern textarea:focus { border-color: var(--accent-cyan); outline: none; box-shadow: 0 0 0 3px rgba(45,212,191,0.2); }
+    /* footer */
+    .footer { background: rgba(3,3,14,0.8); text-align: center; padding: 2rem; border-top: 1px solid rgba(45,212,191,0.15); backdrop-filter: blur(8px); }
+    .footer-social a { color: var(--text-secondary); margin: 0 0.8rem; font-size: 1.3rem; transition: 0.2s; display: inline-block; }
+    .footer-social a:hover { color: var(--accent-cyan); transform: translateY(-3px); }
+    /* reveal classes for GSAP */
+    .reveal-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal-up.revealed { opacity: 1; transform: translateY(0); }
+    /* Stagger children inside containers */
+    .stagger-child > * { opacity: 0; transform: translateY(30px); }
+    @media (max-width: 900px) { .glass-nav { width: 94%; padding: 0.7rem 1.2rem; } .nav-links { display: none; } .hero { flex-direction: column-reverse; text-align: center; } .social-links-hero { justify-content: center; } .avatar { width: 200px; height: 200px; } .section { padding: 4rem 5%; } }
+  </style>
+</head>
+<body>
+  <div class="cursor"></div><div class="cursor-follower"></div>
+  <div class="particles-bg" id="particles"></div><div class="mesh-glow"></div><div class="noise"></div>
+
+  <nav class="glass-nav">
+    <div class="nav-logo">✦ BAKHTIYAR</div>
+    <div class="nav-links">
+      <a href="#home">Home</a><a href="#about">About</a><a href="#skills">Stack</a>
+      <a href="#projects">Projects</a><a href="#certificates">Credentials</a><a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-btn">Hire Me <i class="fas fa-arrow-right"></i></a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <div class="section-badge reveal-hero"><i class="fas fa-bolt"></i> Available · Open to relocate</div>
+      <div class="reveal-hero" style="font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.2;">Md <span style="background: linear-gradient(125deg,#2dd4bf,#a855f7,#f43f5e); -webkit-background-clip:text; background-clip:text; color:transparent;">Bakhtiyar</span></div>
+      <p class="reveal-hero" style="font-size: 1.2rem; margin: 1rem 0; color: var(--text-secondary);">Java Backend Architect · Spring Boot · Full Stack Vision</p>
+      <p class="reveal-hero" style="max-width: 550px; color: #94a3b8;">Building AI-powered SaaS with real users, payments & 99% uptime. MockCraft live with 50+ active subscribers.</p>
+      <div class="social-links-hero reveal-hero">
+        <a href="https://github.com/bkh202" class="social-icon"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/md-bakhtiyar/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#https://leetcode.com/u/bkh_exe/" class="social-icon"><i class="fab fa-code"></i></a>
+        <a href="https://www.geeksforgeeks.org/profile/mdbakhti59ch?tab=activity" class="social-icon"><i class="fas fa-code-branch"></i></a>
+      </div>
+      <div class="reveal-hero" style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="#projects" class="btn-glow"><i class="fas fa-rocket"></i> Explore Work</a>
+        <a href="#contact" class="btn-outline-light"><i class="fas fa-comment"></i> Contact Me</a>
+      </div>
+    </div>
+    <div class="profile-pic reveal-hero">
+  <div class="avatar">
+    <img src="images/bkhportfolio.jpg" alt="Md Bakhtiyar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+  </div>
+</div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section">
+    <div class="section-badge reveal-up">// who i am</div>
+    <div class="section-title reveal-up">Beyond the resume</div>
+    <div class="reveal-up" style="height: 2px; width: 80px; background: linear-gradient(90deg, #2dd4bf, transparent); margin: 1rem 0 2rem;"></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+      <div class="reveal-up"><p style="color: var(--text-secondary);">Final-year B.Tech CSE from RGPV, Bhopal. I architect backend systems that scale. Built <strong>MockCraft</strong> — AI SaaS with subscription billing, AI interviews, and portfolio builder. Passionate about clean code, DSA, and microservices.</p><p style="margin-top: 1rem;">📍 Bhopal, India · Open to relocation nationwide</p></div>
+      <div class="stagger-child reveal-up" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div style="background:var(--surface-2); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid rgba(45,212,191,0.2);"><span style="font-size:2rem; color:#2dd4bf;">7.6</span><div>CGPA</div></div>
+        <div style="background:var(--surface-2); border-radius:1.5rem; padding:1.2rem; text-align:center;"><span style="font-size:2rem; color:#2dd4bf;">3+</span><div>Prod Projects</div></div>
+        <div style="background:var(--surface-2); border-radius:1.5rem; padding:1.2rem; text-align:center;"><span style="font-size:2rem; color:#2dd4bf;">50+</span><div>Live Users</div></div>
+        <div style="background:var(--surface-2); border-radius:1.5rem; padding:1.2rem; text-align:center;"><span style="font-size:2rem; color:#2dd4bf;">99%</span><div>Uptime</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section with logos -->
+  <section id="skills" class="section" style="background: rgba(10,10,24,0.5);">
+    <div class="section-badge reveal-up"><i class="fas fa-microchip"></i> tech arsenal</div>
+    <div class="section-title reveal-up">My Development Stack</div>
+    <div class="skill-grid stagger-child">
+      <div class="skill-card"><h3><i class="fas fa-code"></i> Languages</h3><div><span class="tech-tag"><i class="devicon-java-plain colored"></i> Java</span><span class="tech-tag"><i class="devicon-javascript-plain colored"></i> JavaScript</span><span class="tech-tag"><i class="devicon-cplusplus-plain"></i> C++</span><span class="tech-tag"><i class="devicon-html5-plain colored"></i> HTML5</span><span class="tech-tag"><i class="devicon-css3-plain colored"></i> CSS3</span></div></div>
+      <div class="skill-card"><h3><i class="fas fa-server"></i> Backend & Security</h3><div><span class="tech-tag"><i class="devicon-spring-plain colored"></i> Spring Boot</span><span class="tech-tag"><i class="fas fa-shield-alt"></i> Spring Security</span><span class="tech-tag"><i class="fas fa-key"></i> JWT</span><span class="tech-tag"><i class="devicon-hibernate-plain"></i> Hibernate/JPA</span><span class="tech-tag"><i class="fas fa-cloud"></i> Microservices</span></div></div>
+      <div class="skill-card"><h3><i class="fas fa-database"></i> Database & DevOps</h3><div><span class="tech-tag"><i class="devicon-mysql-plain colored"></i> MySQL</span><span class="tech-tag"><i class="fab fa-git-alt"></i> Git/GitHub</span><span class="tech-tag"><i class="fas fa-flask"></i> Postman</span><span class="tech-tag"><i class="fas fa-chart-line"></i> JMeter</span><span class="tech-tag"><i class="fab fa-docker"></i> Docker</span></div></div>
+      <div class="skill-card"><h3><i class="fas fa-robot"></i> AI & Integrations</h3><div><span class="tech-tag"><i class="fas fa-brain"></i> OpenRouter API</span><span class="tech-tag"><i class="fas fa-credit-card"></i> Cashfree</span><span class="tech-tag"><i class="fas fa-envelope"></i> Brevo</span><span class="tech-tag"><i class="fab fa-react"></i> React.js</span><span class="tech-tag"><i class="fab fa-tailwind"></i> Tailwind</span></div></div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="section">
+    <div class="section-badge reveal-up"><i class="fas fa-laptop-code"></i> live deployments</div>
+    <div class="section-title reveal-up">Featured engineering</div>
+    <div class="stagger-child" style="margin-top: 2rem;">
+      <div class="project-premium">
+        <h2 style="font-size: 1.8rem;">MockCraft <span style="background:#a855f7; font-size:0.7rem; padding:0.2rem 0.8rem; border-radius:30px;">★ FLAGSHIP SAAS</span></h2>
+        <p>AI-powered interview prep + portfolio builder with subscription billing, 50+ active users, Cashfree payments, OpenRouter AI.</p>
+        <div class="project-links" style="margin: 1rem 0;"><a href="https://github.com/bkh202" target="_blank"><i class="fab fa-github"></i> GitHub Repo</a> <a href="https://mockcraft-frontend.vercel.app/" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a></div>
+        <div><span class="tech-tag"><i class="devicon-java-plain"></i> Java</span><span class="tech-tag"><i class="devicon-spring-plain"></i> Spring Boot</span><span class="tech-tag"><i class="fab fa-react"></i> React</span><span class="tech-tag"><i class="devicon-mysql-plain"></i> MySQL</span><span class="tech-tag"><i class="fas fa-credit-card"></i> Cashfree</span><span class="tech-tag"><i class="fas fa-brain"></i> OpenRouter</span></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="project-premium"><h3>FitAI</h3><p>AI fitness app with personalized diet plans, BMI tracking, 30% latency reduction.</p><div class="project-links"><a href="https://github.com/bkh202/FitAi" target="_blank"><i class="fab fa-github"></i> Code</a></div><div><span class="tech-tag"><i class="devicon-spring-plain"></i> Spring Boot</span><span class="tech-tag"><i class="devicon-hibernate-plain"></i> JPA</span><span class="tech-tag"><i class="fas fa-brain"></i> OpenRouter</span><span class="tech-tag"><i class="fas fa-vial"></i> JUnit5</span></div></div>
+        <div class="project-premium"><h3>ImageShareHub</h3><p>Secure media vault with JWT auth, session control, 40% faster load.</p><div class="project-links"><a href="https://github.com/bkh202/ImageShareHub" target="_blank"><i class="fab fa-github"></i> Repo</a></div><div><span class="tech-tag"><i class="fas fa-shield-alt"></i> Spring Security</span><span class="tech-tag"><i class="devicon-hibernate-plain"></i> Hibernate</span><span class="tech-tag"><i class="fas fa-chart-line"></i> JMeter</span><span class="tech-tag"><i class="fas fa-key"></i> JWT</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificates + Languages -->
+  <section id="certificates" class="section" style="background: rgba(10,10,24,0.4);">
+    <div class="section-badge reveal-up"><i class="fas fa-certificate"></i> credentials</div>
+    <div class="section-title reveal-up">Certifications & Languages</div>
+    <div class="stagger-child" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+      <div>
+        <div class="cert-card"><i class="fas fa-certificate"></i> <strong>Java (Scalar Academy)</strong> — <a href="https://moonshot.scaler.com/s/sl/wMVA0XKUAg?_gl=1*ocvbcb*_gcl_aw*R0NMLjE3NzM3NDEzMzcuQ2owS0NRanc5LVBOQmhEZkFSSXNBQkhONi0xWU5mRUh5al9KeGJLZ3FGclJ3SnNWczRUQ0lfWDJvZllxc0JBQ1h1eG1scXVEUC1kWWFid2FBcTcyRUFMd193Y0I.*_gcl_au*MTI0NzI5MDMwOS4xNzY3NjA5MDg0*FPAU*MTI0NzI5MDMwOS4xNzY3NjA5MDg0*_ga*Mzg1OTkzMDgyLjE3NDkzODk2NDA.*_ga_53S71ZZG1X*czE3NzM3NDExOTkkbzE5JGcxJHQxNzczNzQxNDYxJGo1NyRsMCRoNTU3MTcxMTQ0" target="_blank">View Certificate ↗</a></div>
+        <div class="cert-card" style="margin-top: 1rem;"><i class="fas fa-certificate"></i> <strong>SQL (Scalar Academy)</strong> — <a href="https://moonshot.scaler.com/s/li/Ii6vgndZo1" target="_blank">View Certificate ↗</a></div>
+        <div class="cert-card" style="margin-top: 1rem;"><i class="fas fa-certificate"></i> <strong>HPE Chase SWE Simulation</strong> — <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/fgHAi6dLhpRsGKyyN/da2T3WZCbMAJD7bNB_fgHAi6dLhpRsGKyyN_8FWNvSPNX2Lf9QHnJ_1749736850573_completion_certificate.pdf" target="_blank">Credential ↗</a></div>
+      </div>
+      <div>
+        <div class="cert-card"><h3><i class="fas fa-language"></i> Languages</h3><div><span class="lang-badge">English (Fluent)</span> <span class="lang-badge">Hindi (Native)</span></div></div>
+        <div class="cert-card" style="margin-top: 1rem;"><h3><i class="fas fa-trophy"></i> Achievements</h3><p>LeetCode 150+ problems · GFG 2* · Spring Boot microservices certified</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="section-badge reveal-up"><i class="fas fa-paper-plane"></i> get in touch</div>
+    <div class="section-title reveal-up">Let's build the future</div>
+    <div class="stagger-child" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; margin-top: 2rem;">
+      <div style="background: var(--surface-2); border-radius: 2rem; padding: 1.8rem; border: 1px solid rgba(45,212,191,0.2);">
+        <i class="fas fa-envelope" style="font-size: 2rem; color: #2dd4bf;"></i><p>mdbakhtiyar098@gmail.com</p>
+        <i class="fas fa-phone-alt"></i><p>+91 70293 68776</p>
+        <div><i class="fab fa-linkedin"></i> LinkedIn</div>
+        <div style="margin-top: 1.5rem; background: rgba(45,212,191,0.12); border-radius: 50px; padding: 0.8rem; text-align: center; border:1px solid rgba(45,212,191,0.3);">✅ Available for immediate joining · Pan India</div>
+      </div>
+      <div>
+        <form id="advancedContactForm" class="form-modern" style="background: var(--surface-2); padding: 2rem; border-radius: 2rem;">
+          <input type="text" id="fullName" placeholder="Full name *" required>
+          <input type="email" id="emailId" placeholder="Email address *" required>
+          <input type="tel" id="phoneNum" placeholder="Phone number">
+          <textarea rows="4" id="msgContent" placeholder="Tell me about your opportunity..." required></textarea>
+          <button type="submit" id="sendBtn" class="btn-glow" style="width: 100%;"><i class="fas fa-paper-plane"></i> Send message</button>
+          <div id="formFeedback" style="margin-top: 1rem; font-size: 0.8rem; text-align: center;"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-social">
+      <a href="https://github.com/bkh202"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/md-bakhtiyar/"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://leetcode.com/u/bkh_exe/"><i class="fab fa-code"></i></a>
+      <a href="https://www.geeksforgeeks.org/profile/mdbakhti59ch?tab=activity"><i class="fas fa-code-branch"></i></a>
+    </div>
+    <p style="margin-top: 1rem;">© 2025 Md Bakhtiyar — Engineered with Spring Boot & GSAP magic</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    // particles background
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 80; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      const size = Math.random() * 7 + 2;
+      p.style.width = `${size}px`; p.style.height = `${size}px`;
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.top = `${Math.random() * 100}%`;
+      p.style.animationDelay = `${Math.random() * 15}s`;
+      p.style.animationDuration = `${12 + Math.random() * 20}s`;
+      particlesContainer.appendChild(p);
+    }
+    // custom cursor
+    const cursor = document.querySelector('.cursor');
+    const follower = document.querySelector('.cursor-follower');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
+      follower.style.transform = `translate(${e.clientX - 18}px, ${e.clientY - 18}px)`;
+    });
+    // GSAP ScrollTrigger for all reveal-up elements
+    gsap.registerPlugin(ScrollTrigger);
+    document.querySelectorAll('.reveal-up').forEach(el => {
+      gsap.fromTo(el, { opacity: 0, y: 45 }, {
+        opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
+      });
+    });
+    // Stagger animations for .stagger-child children
+    document.querySelectorAll('.stagger-child').forEach(container => {
+      const items = container.children;
+      gsap.fromTo(items, { opacity: 0, y: 35 }, {
+        opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: "back.out(0.8)",
+        scrollTrigger: { trigger: container, start: "top 85%", toggleActions: "play none none reverse" }
+      });
+    });
+    // Hero initial animation
+    gsap.fromTo('.reveal-hero', { opacity: 0, y: 30, stagger: 0.1 }, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out", delay: 0.2 });
+    
+    // EmailJS demo (replace with real keys later)
+    const form = document.getElementById('advancedContactForm');
+    const feedback = document.getElementById('formFeedback');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('emailId').value.trim();
+      const message = document.getElementById('msgContent').value.trim();
+      if (!name || !email || !message) {
+        feedback.innerHTML = '<span style="color:#f87171;">❌ Please fill required fields.</span>';
+        return;
+      }
+      const btn = document.getElementById('sendBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...';
+      btn.disabled = true;
+      setTimeout(() => {
+        console.log(`Message from ${name} (${email}): ${message}`);
+        feedback.innerHTML = '<span style="color:#2dd4bf;">✅ Message sent! I\'ll reply within 24h.</span>';
+        form.reset();
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send message';
+        btn.disabled = false;
+        setTimeout(() => feedback.innerHTML = '', 4000);
+      }, 800);
+    });
+  </script>
+  <script src="Email.js"></script>
+</body>
+</html>
